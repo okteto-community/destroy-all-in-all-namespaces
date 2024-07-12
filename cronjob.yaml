@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: destroy-all
+spec:
+  schedule: "${DESTROY_ALL_JOB_SCHEDULE}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: destroy-all
+            image: ${OKTETO_BUILD_DESTROY_ALL_IMAGE}
+            imagePullPolicy: IfNotPresent
+            envFrom:
+            - secretRef:
+                name: destroy-all-secret 
+          restartPolicy: OnFailure

@@ -1,0 +1,11 @@
+build:
+  destroy-all:
+    context: .
+
+deploy:
+  remote: true
+  commands:
+    - name: Create Secret
+      command: kubectl create secret generic destroy-all-secret --save-config --dry-run=client --from-literal=OKTETO_URL=https://${OKTETO_DOMAIN} --from-literal=OKTETO_TOKEN=${OKTETO_ADMIN_TOKEN} -oyaml | kubectl apply -f -
+    - name: Create Cronjob
+      command: envsubst < cronjob.yaml | kubectl apply -f -
